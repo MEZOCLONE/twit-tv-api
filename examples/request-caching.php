@@ -18,11 +18,22 @@ $app_key = 'YOUR APP KEY HERE';
 $url = 'https://twit.tv/api/v1.0/episodes?range=1';
 
 // Storage of cache files. The specified directory must exist and be writeable by this script.
-$cache_path = __DIR__ . '/cache';
+$cache_dir = __DIR__ . '/cache';
+
+// Create a unique filename based on the URL.
+$cache_file = $cache_dir . '/twitapi_cache_' . md5( $url ) . '.tmp';
+
+// How old, in seconds, can the cached file be before expiring?
+$cache_timeout = 600;
+
+// Check for a cache file that hasn't expired.
+if ( file_exists( $cache_file ) && is_readable( $cache_file ) && ( time() - filemtime( $cache_file ) > $timeout ) {
+	$json = file_get_contents( $cache_file );
+}
 
 // Only make the HTTP request if we can't find a recent copy locally.
-if ( ! $response = get_from_cache( $cache_path, $url ) ) {
-
+// * This is essentially identical to the Simple Request example.
+if ( empty( $json ) ) {
 	// Build HTTP headers for curl with API credentials
 	$headers = array(
 		'app-id: ' . $app_id,
@@ -45,6 +56,11 @@ if ( ! $response = get_from_cache( $cache_path, $url ) ) {
 
 	//   Close cURL handle resource.
 	curl_close( $ch );
+
+	// ** If we have a successful response, store the result in the cache for later.
+	if ( $json ) {
+		file_put_contents( $cache_file, $json );
+	}
 }
 
 // Turn JSON response into a PHP object
@@ -62,35 +78,4 @@ if ( $response_obj !== null ) {
 
 	// Something went wrong. Display an error message.
 	echo "No response. Check your App ID, Key, and request URL for errors.\n";
-}
-
-// Basic caching 
-function get_from_cache( $path, $url ) {
-	// How long should we cache a URL, in seconds?
-	$timeout = 600;
-
-	// Create a unique filename based on the URL.
-	$cache_key = md5( $url );
-
-	// Add some bits to help us remember that this is a temporary cache file.
-	$cache_file = $path . '/twitapi_cache_' . $cache_key . '.tmp';
-
-	// Initialize the return value to assume the worst.
-	$result = false;
-
-	// Can we find it?
-	if ( file_exists( $cache_file ) && is_readable( $cache_file ) ) {
-
-		if ( time() - filemtime( $cache_file ) > $timeout ) {
-		// If it's too old based on file modification time, delete it.
-			unlink( $cache_file );
-
-		} else {
-		// Otherwise, retrieve the contents
-			$result = file_get_contents( $cache_file );
-
-		}
-	}
-
-	return $result;
 }
