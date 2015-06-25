@@ -20,6 +20,11 @@ $url = 'https://twit.tv/api/v1.0/episodes?range=1';
 // Storage of cache files. The specified directory must exist and be writeable by this script.
 $cache_dir = __DIR__ . '/cache';
 
+// Create cache directory if it doesn't exist yet.
+if ( ! file_exists( $cache_dir ) ) {
+	mkdir( $cache_dir );
+}
+
 // Create a unique filename based on the URL.
 $cache_file = $cache_dir . '/twitapi_cache_' . md5( $url ) . '.tmp';
 
