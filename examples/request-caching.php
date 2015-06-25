@@ -27,13 +27,12 @@ $cache_file = $cache_dir . '/twitapi_cache_' . md5( $url ) . '.tmp';
 $cache_timeout = 600;
 
 // Check for a cache file that hasn't expired.
-if ( file_exists( $cache_file ) && is_readable( $cache_file ) && ( time() - filemtime( $cache_file ) > $timeout ) {
+if ( file_exists( $cache_file ) && is_readable( $cache_file ) && ( time() - filemtime( $cache_file ) > $timeout ) ) {
 	$json = file_get_contents( $cache_file );
-}
+} else {
+	// Only make the HTTP request if we can't find a recent copy locally.
+	// * This is essentially identical to the Simple Request example.
 
-// Only make the HTTP request if we can't find a recent copy locally.
-// * This is essentially identical to the Simple Request example.
-if ( empty( $json ) ) {
 	// Build HTTP headers for curl with API credentials
 	$headers = array(
 		'app-id: ' . $app_id,
