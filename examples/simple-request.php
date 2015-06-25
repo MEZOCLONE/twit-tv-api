@@ -29,17 +29,24 @@ curl_setopt_array( $ch, array(
 ) );
 
 //   Make the request and store the JSON response.
-$response = curl_exec( $ch );
+$json = curl_exec( $ch );
 
 //   Close cURL handle resource.
 curl_close( $ch );
 
-
 // Turn JSON response into a PHP object
-$json = json_decode( $response );
+$response_obj = json_decode( $json );
 
-// Grab the parts we need, do something useful with it!
-$episode = $json->episodes[0];
-$show = $episode->shows[0];
+// Check that the response was JSON and was processed correctly.
+if ( $response_obj !== null ) {
 
-echo 'The most recent episode is ' htmlspecialchars( $show->label . ': ' . $episode->label );
+	// Grab the parts we need, do something useful with it!
+	$episode = $response_obj->episodes[0];
+	$show = $episode->shows[0];
+
+	echo 'The most recent episode is ' . htmlspecialchars( $show->label . ': ' . $episode->label );
+} else {
+
+	// Something went wrong. Display an error message.
+	echo 'No response. Check your App ID, Key, and request URL for errors.';
+}
