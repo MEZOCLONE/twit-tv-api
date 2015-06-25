@@ -60,11 +60,6 @@ if ( file_exists( $cache_file ) && is_readable( $cache_file ) && ( time() - file
 
 	//   Close cURL handle resource.
 	curl_close( $ch );
-
-	// ** If we have a successful response, store the result in the cache for later.
-	if ( $json ) {
-		file_put_contents( $cache_file, $json );
-	}
 }
 
 // Turn JSON response into a PHP object
@@ -72,6 +67,11 @@ $response_obj = json_decode( $json );
 
 // Check that the response was JSON and was processed correctly.
 if ( $response_obj !== null ) {
+
+	// ** Since we have a successful response, store the content in the cache for later.
+	if ( $json ) {
+		file_put_contents( $cache_file, $json );
+	}
 
 	// Grab the parts we need, do something useful with it!
 	$episode = $response_obj->episodes[0];
