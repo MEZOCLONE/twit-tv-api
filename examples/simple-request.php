@@ -1,9 +1,16 @@
 <?php
 /*
 	TWiT.tv API Example: A Simple Request
+	by Jeff Brand
 
 	This script demonstrates a basic request to the API using PHP cURL. The URL provided
 	retrieves the entry for the latest episode and uses the data to print a simple message.
+
+	More Info:
+	* API credentials: https://twit.tv/about/developer-program
+	* API documentation: http://docs.twittv.apiary.io/
+
+	This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.
 */
 
 // Basics
@@ -42,11 +49,11 @@ if ( $response_obj !== null ) {
 
 	// Grab the parts we need, do something useful with it!
 	$episode = $response_obj->episodes[0];
-	$show = $episode->shows[0];
+	$show = $episode->_embedded->shows[0];
 
-	echo 'The most recent episode is ' . htmlspecialchars( $show->label . ': ' . $episode->label );
+	echo 'The most recent episode is ' . htmlspecialchars( $show->label . ': ' . $episode->label ) . "\n";
 } else {
 
 	// Something went wrong. Display an error message.
-	echo 'No response. Check your App ID, Key, and request URL for errors.';
+	echo "No response. Check your App ID, Key, and request URL for errors.\n";
 }
