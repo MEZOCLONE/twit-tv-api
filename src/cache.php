@@ -97,15 +97,14 @@ class TWiTTV_Cache {
 
 		$file = $this->path . '/' . $key;
 		if ( is_file( $file ) ) {
-		//	return unlink( $this->path . '/' . $key );
-			echo 'UNLINK: ' . $this->path . '/' . $key;
+			return unlink( $this->path . '/' . $key );
 		}
 
 		return false;
 	}
 
 	function clear_cache() {
-		if ( $this->is_enabled() ) {
+		if ( !empty( this->path ) ) {
 			unlink( $this->path . '/twittv_cache_*.tmp' );
 		}
 	}
