@@ -53,7 +53,7 @@ class TWiTTV_API {
 		}
 
 		// Store in cache
-		if ( ! $from_cache && $this->is_cache_enabled() ) {
+		if ( ! $from_cache && $this->is_cache_enabled() && $response ) {
 			$cache->set_item( $cache_key, $response );
 		}
 
