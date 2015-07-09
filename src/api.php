@@ -74,7 +74,15 @@ class TWiTTV_API {
 	}
 
 	function response_object( $data ) {
-		return new $this->class['element']( $data );
+		if ( ! $data ) {
+			$obj = false;
+		} else if ( class_exists( $this->class['element'] ) ) {
+			$obj = new $this->class['element']( $data );
+		} else {
+			$obj = $data;
+		}
+
+		return $obj;
 	}
 
 	private function build_request_url( $endpoint, $param ) {
