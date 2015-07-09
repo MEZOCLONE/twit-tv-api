@@ -11,32 +11,31 @@ class TWiTTV_API {
 
 	const VERSION = 0.2;
 
-	public $service_url = 'https://twit.tv/api/v1.0/';
-
 	private $app_key;
 	private $app_id;
 	private $user_agent;
 
+	public $service_url = 'https://twit.tv/api/v1.0/';
 	public $request;
 	public $response;
 
-	private $class = array(
+	public $class = array(
 		'cache' => 'TWiTTV_Cache',
 		'element' => 'TWiTTV_Element'
 	);
 
-	function __construct( $app_id, $app_key ) {
+	public function __construct( $app_id, $app_key ) {
 		$this->app_id     = $app_id;
 		$this->app_key    = $app_key;
 		$this->user_agent = $this->user_agent();
 	}
 
-	function request_endpoint( $endpoint, $param = array() ) {
+	public function request_endpoint( $endpoint, $param = array() ) {
 		$url = $this->build_request_url( $endpoint, $param );
 		return $this->request( $url );
 	}
 
-	function request( $url ) {
+	public function request( $url ) {
 		$headers    = $this->request_headers();
 		$cache      = $this->get_cache();
 		$cache_key  = $this->cache_key( $url );
@@ -73,7 +72,7 @@ class TWiTTV_API {
 		return $this->response_object( $response );
 	}
 
-	function response_object( $data ) {
+	private function response_object( $data ) {
 		if ( ! $data ) {
 			$obj = false;
 		} else if ( class_exists( $this->class['element'] ) ) {
@@ -130,7 +129,7 @@ class TWiTTV_API {
 	}
 
 	// Caching
-	function get_cache() {
+	public function get_cache() {
 		static $cache;
 
 		if ( ! isset( $cache ) ) {
@@ -140,12 +139,12 @@ class TWiTTV_API {
 		return $cache;
 	}
 
-	function is_cache_enabled() {
+	public function is_cache_enabled() {
 		$cache = $this->get_cache();
 		return $cache && $cache->is_enabled();
 	}
 
-	function set_cache_path( $path, $create_if_missing = false ) {
+	public function set_cache_path( $path, $create_if_missing = false ) {
 		return $this->get_cache()->set_path( $path, $create_if_missing );
 	}
 
