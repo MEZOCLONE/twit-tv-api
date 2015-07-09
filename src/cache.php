@@ -104,7 +104,7 @@ class TWiTTV_Cache {
 	}
 
 	function clear_cache() {
-		if ( !empty( this->path ) ) {
+		if ( !empty( $this->path ) ) {
 			unlink( $this->path . '/twittv_cache_*.tmp' );
 		}
 	}
